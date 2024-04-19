@@ -104,17 +104,11 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-
-      - run: docker version
-
+          
       - run: |
-          docker manifest create ${IMAGE}:${COMMIT} \
-              --amend ${IMAGE}:{amd,arm}64-${COMMIT}
-          docker manifest create ${IMAGE}:${VERSION} \
-              --amend ${IMAGE}:{amd,arm}64-${VERSION}
-          docker manifest create ${IMAGE}:latest \
-              --amend ${IMAGE}:{amd,arm}64
-
-          docker manifest push ${IMAGE}:${COMMIT}
-          docker manifest push ${IMAGE}:${VERSION}
-          docker manifest push ${IMAGE}:latest
+          docker buildx imagetools create \
+            --tag ${IMAGE}:${COMMIT} ${IMAGE}:a{md,rm}64-${COMMIT}
+          docker buildx imagetools create \
+            --tag ${IMAGE}:${VERSION} ${IMAGE}:a{md,rm}64-${VERSION}
+          docker buildx imagetools create \
+            --tag ${IMAGE}:latest ${IMAGE}:a{md,rm}64

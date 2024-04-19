@@ -85,8 +85,8 @@ jobs:
         with:
           name: ${{ matrix.arch }}
           path: |
-            src/pixivfe
-            src/views/
+            PixivFE/pixivfe
+            PixivFE/views/
 
   post:
     runs-on: ubuntu-latest
@@ -101,6 +101,8 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+
+      - run: docker version
 
       - run: |
           docker manifest create ${IMAGE}:${COMMIT} \

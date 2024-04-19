@@ -1,2 +1,3 @@
 PixivFE/
+.docker_cache/
 .env

@@ -63,7 +63,7 @@ jobs:
       - uses: actions/cache/restore@v4
         id: docker-cache-restore
         with:
-          path: docker_cache
+          path: .docker_cache
           key: docker-cache-ubuntu-20.04-matrix-${{ matrix.arch }}-${{ hashFiles('./PixivFE/go.mod', './PixivFE/go.sum', './PixivFE/Dockerfile') }}
 
       - uses: docker/build-push-action@v5
@@ -74,15 +74,17 @@ jobs:
           platforms: linux/${{ matrix.arch }}
           tags: ${{ steps.image-meta.outputs.tags }}
           labels: ${{ steps.image-meta.outputs.labels }}
+          cache-to: type=local,src=.docker_cache/
+          cache-from: type=local,src=.docker_cache/
               
       - uses: actions/cache/save@v4
         id: docker-cache-save
         with:
-          path: docker_cache
+          path: .docker_cache
           key: docker-cache-ubuntu-20.04-matrix-${{ matrix.arch }}-${{ hashFiles('./PixivFE/go.mod', './PixivFE/go.sum', './PixivFE/Dockerfile') }}
 
       - uses: actions/upload-artifact@v4
-        with: { name: "${{ matrix.arch }}", path: src/(pixivfe,views/) }
+        with: { name: "${{ matrix.arch }}", path: src/(pixivfe|views/) }
 
   post:
     runs-on: ubuntu-latest
@@ -98,17 +100,17 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - run: |
-          docker manifest create ${IMAGE}:${COMMIT} \
-            --amend ${IMAGE}:{amd,arm}64-${COMMIT}
+      # - run: |
+      #     docker manifest create ${IMAGE}:${COMMIT} \
+      #       --amend ${IMAGE}:{amd,arm}64-${COMMIT}
 
-          docker manifest push ${IMAGE}:${COMMIT}
+      #     docker manifest push ${IMAGE}:${COMMIT}
 
-      - run: |
-          docker manifest create ${IMAGE}:${VERSION} \
-            --amend ${IMAGE}:{amd,arm}64-${VERSION}
+      # - run: |
+      #     docker manifest create ${IMAGE}:${VERSION} \
+      #       --amend ${IMAGE}:{amd,arm}64-${VERSION}
           
-          docker manifest push ${IMAGE}:${VERSION}
+      #     docker manifest push ${IMAGE}:${VERSION}
           
       - run: |
           docker manifest create ${IMAGE}:latest \

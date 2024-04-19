@@ -30,11 +30,8 @@ jobs:
           cd PixivFE 
           CGO_ENABLED=0 GOOS=linux GOARCH=${{ matrix.arch }} go build -mod=readonly -v -ldflags="-s -w" -o pixivfe
 
-          version=$(grep -rPoh "(?<=s.Version = \").*(?=\")")
-          echo "::set-env name=version::$version"
-
-          commit=$(git rev-parse --short HEAD)
-          echo "::set-env name=commit::$commit"
+          echo "version=$(grep -rPoh "(?<=s.Version = \").*(?=\")")" >> $GITHUB_OUTPUT
+          echo "commit=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3

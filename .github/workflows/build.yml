@@ -34,7 +34,7 @@ jobs:
       - id: meta
         run: |
           cd PixivFE
-          echo "continue=$(diff -u .last_commit <(git rev-parse --short HEAD) && echo false || echo true)" >> $GITHUB_OUTPUT
+          echo "continue=$(diff -u ../.last_commit <(git rev-parse --short HEAD) && echo false || echo true)" >> $GITHUB_OUTPUT
           echo "version=$(grep -rPoh "(?<=s.Version = \").*(?=\")")" >> $GITHUB_OUTPUT
           echo "commit=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
 

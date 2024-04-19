@@ -22,7 +22,6 @@ jobs:
         arch: [amd64, arm64]
     steps:
       - uses: actions/checkout@v4
-        with: { fetch-depth: 0 }
 
       - run: git clone --depth=1 https://codeberg.org/VnPower/PixivFE
 
@@ -93,17 +92,6 @@ jobs:
           key: docker-cache-ubuntu-20.04-matrix-${{ matrix.arch }}-${{ hashFiles('./PixivFE/go.mod', './PixivFE/go.sum', './PixivFE/Dockerfile') }}
 
       - if: ${{ steps.meta.outputs.continue == 'true' }}
-        run:
-          old=$(cat .last_commit)
-          echo "${{ steps.meta.outputs.commit }}" > .last_commit
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add .last_commit
-          git commit -m "Update .last_commit" -m "${old} >> ${{ steps.meta.outputs.commit }}"
-          git status
-          git push -u origin master
-
-      - if: ${{ steps.meta.outputs.continue == 'true' }}
         uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.arch }}
@@ -136,3 +124,17 @@ jobs:
             --tag ${IMAGE}:${VERSION} ${IMAGE}:a{md,rm}64-${VERSION}
           docker buildx imagetools create \
             --tag ${IMAGE}:latest ${IMAGE}:a{md,rm}64
+
+      - run: |          
+          OLD=$(cat .last_commit)
+          NEW=${COMMIT}
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          
+          echo "${NEW}" > .last_commit
+          git add .last_commit
+          git commit -m "Update .last_commit" -m "${OLD} >> ${NEW}"
+          
+          git status
+          git push -u origin master

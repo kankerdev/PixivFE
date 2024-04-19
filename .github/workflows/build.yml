@@ -58,7 +58,7 @@ jobs:
       - uses: docker/build-push-action@v5
         with:
           push: true
-          context: ./src/
+          context: ./PixivFE
           file: Dockerfile
           platforms: linux/${{ matrix.arch }}
           tags: ${{ steps.image-meta.outputs.tags }}

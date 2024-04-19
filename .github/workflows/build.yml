@@ -98,20 +98,11 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      # - run: |
-      #     docker manifest create ${IMAGE}:${COMMIT} \
-      #       --amend ${IMAGE}:{amd,arm}64-${COMMIT}
-
-      #     docker manifest push ${IMAGE}:${COMMIT}
-
-      # - run: |
-      #     docker manifest create ${IMAGE}:${VERSION} \
-      #       --amend ${IMAGE}:{amd,arm}64-${VERSION}
-          
-      #     docker manifest push ${IMAGE}:${VERSION}
-          
       - run: |
-          docker manifest create ${IMAGE}:latest \
-            --amend ${IMAGE}:{amd,arm}64
-          
+          docker manifest create ${IMAGE}:${COMMIT}   --amend=${IMAGE}:{amd,arm}64-${COMMIT}
+          docker manifest create ${IMAGE}:${VERSION}  --amend=${IMAGE}:{amd,arm}64-${VERSION}
+          docker manifest create ${IMAGE}:latest      --amend=${IMAGE}:{amd,arm}64
+
+          docker manifest push ${IMAGE}:${COMMIT}
+          docker manifest push ${IMAGE}:${VERSION}
           docker manifest push ${IMAGE}:latest

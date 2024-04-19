@@ -11,8 +11,10 @@ permissions:
 
 jobs:
   build:
-    name: Build images
     runs-on: ubuntu-20.04
+    outputs:
+      commit: ${{ steps.compile-step.outputs.commit }}
+      version: ${{ steps.compile-step.outputs.version }}
     strategy:
       fail-fast: true
       matrix:
@@ -64,5 +66,33 @@ jobs:
           tags: ${{ steps.image-meta.outputs.tags }}
           labels: ${{ steps.image-meta.outputs.labels }}
               
-      # - uses: actions/upload-artifact@v4
-      #   with: { name: "pixivfe-${{ matrix.arch }}", path: src/(pixivfe,views/) }
+      - uses: actions/upload-artifact@v4
+        with: { name: "${{ matrix.arch }}", path: src/(pixivfe,views/) }
+
+  post:
+    runs-on: ubuntu-20.04
+    needs: [ build ]
+    env: 
+      IMAGE_NAME: ghcr.io/${{ github.repository }}
+      COMMIT: ${{ needs.build.outputs.commit }}
+      VERSION: ${{ needs.build.outputs.commit }}
+    steps:
+      - name: Login to DockerHub
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Push Multi-Arch Manifests
+        run: |
+          docker manifest create ${IMAGE_NAME}:${VERSION} \
+            --amend ${IMAGE_NAME}:{amd,arm}64-${VERSION}
+          docker manifest create ${IMAGE_NAME}:${COMMIT} \
+            --amend ${IMAGE_NAME}:{amd,arm}64-${COMMIT}
+          docker manifest create ${IMAGE_NAME}:latest \
+            --amend ${IMAGE_NAME}:{amd,arm}64
+          
+          docker manifest push ${IMAGE_NAME}:${VERSION}
+          docker manifest push ${IMAGE_NAME}:${COMMIT}
+          docker manifest push ${IMAGE_NAME}:latest

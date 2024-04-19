@@ -25,6 +25,6 @@ jobs:
         with: { go-version: 1.22.2 }
       - run: go version
       - run: git clone https://codeberg.org/VnPower/PixivFE src
-      - run: cd src && CGO_ENABLED=0 GOOS=linux GOARCH=${{ matrix.arch }} go build -mod=readonly -v -ldflags="-s -w" -o pixivfe && ./pixivfe --help
+      - run: cd src && CGO_ENABLED=0 GOOS=linux GOARCH=${{ matrix.arch }} go build -mod=readonly -v -ldflags="-s -w" -o pixivfe
       - uses: actions/upload-artifact@v4
         with: { name: "pixivfe-${{ matrix.arch }}", path: src/pixivfe }

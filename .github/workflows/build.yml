@@ -20,7 +20,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with: { fetch-depth: 0 }
+      - uses: actions/checkout@v4 
       - uses: actions/setup-go@v4
         with: { go-version: 1.22.2 }
-      - run: echo ${{ matrix.arch }}
       - run: go version
+      - run: git clone https://codeberg.org/VnPower/PixivFE src
+      - run: cd src && CGO_ENABLED=0 GOOS=linux GOARCH=${{ matrix.arch }} go build -mod=readonly -v -ldflags="-s -w" -o pixivfe && ./pixivfe --help

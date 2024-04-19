@@ -8,9 +8,9 @@ RUN addgroup -g 1000 -S pixivfe && \
     chown -R pixivfe:pixivfe /app
 
 # Copy the compiled binary and other necessary files
-COPY ./PixivFE/pixivfe /app/pixivfe
-COPY ./PixivFE/views /app/views
-COPY ./PixivFE/docker/entrypoint.sh /entrypoint.sh
+COPY ./pixivfe /app/pixivfe
+COPY ./views /app/views
+COPY ./docker/entrypoint.sh /entrypoint.sh
 
 # Include entrypoint script and ensure it's executable
 RUN chmod +x /entrypoint.sh && \

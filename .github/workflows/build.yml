@@ -82,7 +82,11 @@ jobs:
           key: docker-cache-ubuntu-20.04-matrix-${{ matrix.arch }}-${{ hashFiles('./PixivFE/go.mod', './PixivFE/go.sum', './PixivFE/Dockerfile') }}
 
       - uses: actions/upload-artifact@v4
-        with: { name: "${{ matrix.arch }}", path: src/(pixivfe|views/) }
+        with: 
+          name: ${{ matrix.arch }}
+          path: |
+            src/pixivfe
+            src/views/
 
   post:
     runs-on: ubuntu-latest
@@ -99,9 +103,9 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - run: |
-          docker manifest create ${IMAGE}:${COMMIT}   --amend=${IMAGE}:{amd,arm}64-${COMMIT}
-          docker manifest create ${IMAGE}:${VERSION}  --amend=${IMAGE}:{amd,arm}64-${VERSION}
-          docker manifest create ${IMAGE}:latest      --amend=${IMAGE}:{amd,arm}64
+          docker manifest create --ammend ${IMAGE}:${COMMIT}  ${IMAGE}:{amd,arm}64-${COMMIT}
+          docker manifest create --ammend ${IMAGE}:${VERSION} ${IMAGE}:{amd,arm}64-${VERSION}
+          docker manifest create --ammend ${IMAGE}:latest     ${IMAGE}:{amd,arm}64
 
           docker manifest push ${IMAGE}:${COMMIT}
           docker manifest push ${IMAGE}:${VERSION}

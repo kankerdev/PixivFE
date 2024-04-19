@@ -7,12 +7,11 @@ on:
 
 permissions:
   packages: write
-  contents: read
+  contents: write
 
 jobs:
   build:
     runs-on: ubuntu-20.04
-    permissions: { contents: write }
     outputs:
       commit: ${{ steps.meta.outputs.commit }}
       version: ${{ steps.meta.outputs.version }}
@@ -35,7 +34,7 @@ jobs:
       - id: meta
         run: |
           cd PixivFE
-          echo "continue=$(diff -u bruh.txt <(cat .last_commit) && echo false || echo true)" >> $GITHUB_OUTPUT
+          echo "continue=$(diff -u .last_commit <(git rev-parse --short HEAD) && echo false || echo true)" >> $GITHUB_OUTPUT
           echo "version=$(grep -rPoh "(?<=s.Version = \").*(?=\")")" >> $GITHUB_OUTPUT
           echo "commit=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
 

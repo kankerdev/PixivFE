@@ -62,7 +62,7 @@ jobs:
         
       - uses: actions/cache/restore@v4
         id: docker-cache-restore
-        with: &docker_cache_with
+        with:
           path: docker_cache
           key: docker-cache-ubuntu-20.04-matrix-${{ matrix.arch }}-${{ hashFiles('./PixivFE/go.mod', './PixivFE/go.sum', './PixivFE/Dockerfile') }}
 
@@ -77,7 +77,9 @@ jobs:
               
       - uses: actions/cache/save@v4
         id: docker-cache-restore
-        with: *docker_cache_with
+        with:
+          path: docker_cache
+          key: docker-cache-ubuntu-20.04-matrix-${{ matrix.arch }}-${{ hashFiles('./PixivFE/go.mod', './PixivFE/go.sum', './PixivFE/Dockerfile') }}
 
       - uses: actions/upload-artifact@v4
         with: { name: "${{ matrix.arch }}", path: src/(pixivfe,views/) }

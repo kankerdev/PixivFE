@@ -76,7 +76,7 @@ jobs:
           labels: ${{ steps.image-meta.outputs.labels }}
               
       - uses: actions/cache/save@v4
-        id: docker-cache-restore
+        id: docker-cache-save
         with:
           path: docker_cache
           key: docker-cache-ubuntu-20.04-matrix-${{ matrix.arch }}-${{ hashFiles('./PixivFE/go.mod', './PixivFE/go.sum', './PixivFE/Dockerfile') }}

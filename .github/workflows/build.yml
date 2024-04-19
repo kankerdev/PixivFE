@@ -104,11 +104,11 @@ jobs:
 
       - run: |
           docker manifest create ${IMAGE}:${COMMIT} \
-              --ammend ${IMAGE}:{amd,arm}64-${COMMIT}
+              --amend ${IMAGE}:{amd,arm}64-${COMMIT}
           docker manifest create ${IMAGE}:${VERSION} \
-              --ammend ${IMAGE}:{amd,arm}64-${VERSION}
+              --amend ${IMAGE}:{amd,arm}64-${VERSION}
           docker manifest create ${IMAGE}:latest \
-              --ammend ${IMAGE}:{amd,arm}64
+              --amend ${IMAGE}:{amd,arm}64
 
           docker manifest push ${IMAGE}:${COMMIT}
           docker manifest push ${IMAGE}:${VERSION}

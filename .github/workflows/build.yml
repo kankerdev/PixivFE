@@ -3,7 +3,7 @@ name: Build binaries and container images
 on:
   push: # temp
   workflow_dispatch:
-  schedule: [ cron: '0 4 * * *' ]
+  schedule: [ cron: '0 0 * * *' ]
 
 permissions:
   packages: write

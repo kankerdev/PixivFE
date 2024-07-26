@@ -52,7 +52,7 @@ jobs:
         uses: docker/metadata-action@v5
         id: image-meta
         with:
-          images: ghcr.io/${{ github.repository }}
+          images: ghcr.io/kankerdev/pixivfe
           tags: |
             type=raw,value=${{ matrix.arch }}-${{ steps.meta.outputs.version }},enable={{is_default_branch}}
             type=raw,value=${{ matrix.arch }}-${{ steps.meta.outputs.commit }},enable={{is_default_branch}}
@@ -104,7 +104,7 @@ jobs:
     needs: [ build ]
     if: ${{ needs.build.outputs.continue == 'true' }}
     env:
-      IMAGE: ghcr.io/${{ github.repository }}
+      IMAGE: ghcr.io/kankerdev/pixivfe
       COMMIT: ${{ needs.build.outputs.commit }}
       VERSION: ${{ needs.build.outputs.version }}
     steps:
